@@ -1,8 +1,6 @@
-## Downloading nativewind
-1-Its used for tailwind css soo i would install it from nativewind website
 
 
-# Building SpeakFy 
+# Building SpeakFy file Structure
 - Create mobile application to build confidence
 edit all these files 
  app/_layout.jsx
