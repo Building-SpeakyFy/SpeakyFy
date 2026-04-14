@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
-import { COLORS } from '../../../constants/color'
+import { COLORS } from '../../constants/color'
 
 const { width } = Dimensions.get('window')
 const OTP_LENGTH = 4

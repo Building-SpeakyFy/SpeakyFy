@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { COLORS } from '../../../constants/color'
+import { COLORS } from '../../constants/color'
 
 const { width } = Dimensions.get('window')
 
@@ -45,6 +45,14 @@ const GenderScreen = ({ initialGender, initialFullName, initialDob, onProceed, o
 
   // Button
   const buttonScale = useRef(new Animated.Value(1)).current
+
+  const parseDate = (dateStr) => {
+    if (!dateStr) return new Date(2000, 0, 1);
+    const [d, m, y] = dateStr.split(' / ').map(Number);
+    return new Date(y, m - 1, d);
+  };
+
+  const [dateValue, setDateValue] = useState(parseDate(initialDob));
 
   useEffect(() => {
     // Stagger entries
@@ -93,6 +101,7 @@ const GenderScreen = ({ initialGender, initialFullName, initialDob, onProceed, o
   const onChangeDate = (event, selectedDate) => {
     setShowPicker(false)
     if (selectedDate) {
+      setDateValue(selectedDate)
       const day = String(selectedDate.getDate()).padStart(2, '0')
       const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
       const year = selectedDate.getFullYear()
@@ -278,7 +287,7 @@ const GenderScreen = ({ initialGender, initialFullName, initialDob, onProceed, o
 
             {showPicker && (
               <DateTimePicker
-                value={new Date(2000, 0, 1)}
+                value={dateValue}
                 mode="date"
                 display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                 onChange={onChangeDate}

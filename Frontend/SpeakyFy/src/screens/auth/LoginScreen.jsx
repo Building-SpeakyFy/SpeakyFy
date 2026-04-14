@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
-import { COLORS } from '../../../constants/color'
+import { COLORS } from '../../constants/color'
 
 const LoginScreen = ({ initialPhone = '', onSendOtp }) => {
   const [phoneNumber, setPhoneNumber] = useState(initialPhone)
