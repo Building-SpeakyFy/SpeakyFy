@@ -12,6 +12,8 @@ export function AuthProvider({ children }) {
   const [gender, setGender] = useState('');
   const [fullName, setFullName] = useState('');
   const [dob, setDob] = useState('');
+  const [streak, setStreak] = useState(12);
+  const [confirmationResult, setConfirmationResult] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const completeAuth = () => {
@@ -24,6 +26,7 @@ export function AuthProvider({ children }) {
     setGender('');
     setFullName('');
     setDob('');
+    setStreak(0);
     setIsAuthenticated(false);
   };
 
@@ -33,6 +36,8 @@ export function AuthProvider({ children }) {
     gender, setGender,
     fullName, setFullName,
     dob, setDob,
+    streak, setStreak,
+    confirmationResult, setConfirmationResult,
     isAuthenticated,
     completeAuth,
     resetAuth,

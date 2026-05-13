@@ -15,7 +15,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import { COLORS } from '../../constants/color'
 
-const LoginScreen = ({ initialPhone = '', onSendOtp }) => {
+const LoginScreen = ({ initialPhone = '', onSendOtp, isLoading = false }) => {
   const [phoneNumber, setPhoneNumber] = useState(initialPhone)
   const [isFocused, setIsFocused] = useState(false)
   const isValid = phoneNumber.length === 10
@@ -68,7 +68,7 @@ const LoginScreen = ({ initialPhone = '', onSendOtp }) => {
   }, [])
 
   const handleSendOtp = () => {
-    if (isValid) {
+    if (isValid && !isLoading) {
       Animated.sequence([
         Animated.timing(buttonScale, { toValue: 0.92, duration: 100, useNativeDriver: true }),
         Animated.spring(buttonScale, { toValue: 1, friction: 3, useNativeDriver: true }),
@@ -152,16 +152,16 @@ const LoginScreen = ({ initialPhone = '', onSendOtp }) => {
               </View>
 
               <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
-                <Pressable onPress={handleSendOtp} disabled={!isValid}>
+                <Pressable onPress={handleSendOtp} disabled={!isValid || isLoading}>
                   <LinearGradient
                     colors={isValid ? [COLORS.secondary, COLORS.primary] : ['#1c1c1e', '#1c1c1e']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                     className={`h-[58px] rounded-[20px] flex-row items-center justify-center gap-2.5 ${!isValid ? 'border border-zinc-800' : ''}`}
                   >
-                    <Ionicons name="arrow-forward" size={20} color={isValid ? '#fff' : '#4a4a4c'} />
+                    <Ionicons name={isLoading ? "sync-outline" : "arrow-forward"} size={20} color={isValid ? '#fff' : '#4a4a4c'} />
                     <Text className={`text-base font-bold tracking-[0.5px] ${isValid ? 'text-white' : 'text-[#4a4a4c]'}`}>
-                      Send OTP
+                      {isLoading ? 'Sending...' : 'Send OTP'}
                     </Text>
                   </LinearGradient>
                 </Pressable>

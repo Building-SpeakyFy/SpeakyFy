@@ -272,20 +272,48 @@ const GenderScreen = ({ initialGender, initialFullName, initialDob, onProceed, o
             {/* DOB */}
             <Animated.View style={{ opacity: anims[5].opacity, transform: [{ translateY: anims[5].slide }] }}>
               <Text className="text-[10px] color-[#71717a] tracking-[2.5px] font-bold mb-2.5 ml-1 uppercase">DATE OF BIRTH</Text>
-              <TouchableOpacity onPress={() => setShowPicker(true)} className="flex-row items-center bg-[#111113] rounded-2xl h-[60px] px-1 border-[1.5px] border-[#1c1c1e] mb-8" activeOpacity={0.7}>
-                <View className="w-10 h-10 rounded-xl bg-[#9d5ce9]/10 items-center justify-center mr-1 ml-1.5">
-                  <Ionicons name="calendar" size={18} color="#9d5ce9" />
+              
+              {Platform.OS === 'web' ? (
+                <View className="flex-row items-center bg-[#111113] rounded-2xl h-[60px] px-1 border-[1.5px] border-[#1c1c1e] mb-8">
+                  <View className="w-10 h-10 rounded-xl bg-[#9d5ce9]/10 items-center justify-center mr-1 ml-1.5">
+                    <Ionicons name="calendar" size={18} color="#9d5ce9" />
+                  </View>
+                  <TextInput
+                    className="flex-1 text-white text-base ml-2 font-medium"
+                    placeholder="DD / MM / YYYY"
+                    placeholderTextColor="#52525b"
+                    value={dob}
+                    onChangeText={(text) => {
+                      let cleaned = text.replace(/[^0-9]/g, '');
+                      if (cleaned.length > 8) cleaned = cleaned.substring(0, 8);
+                      let formatted = cleaned;
+                      if (cleaned.length > 2) {
+                        formatted = cleaned.substring(0, 2) + ' / ' + cleaned.substring(2);
+                      }
+                      if (cleaned.length > 4) {
+                        formatted = formatted.substring(0, 7) + ' / ' + cleaned.substring(4);
+                      }
+                      setDob(formatted);
+                    }}
+                    maxLength={14}
+                  />
                 </View>
-                <Text className={`flex-1 text-base ml-2 font-medium ${!dob ? 'text-[#3a3a3c]' : 'text-white'}`}>
-                  {dob || 'Select your birth date'}
-                </Text>
-                <View className="w-8 h-8 rounded-lg bg-[#1c1c1e] items-center justify-center mr-1.5">
-                  <Ionicons name="chevron-down" size={16} color="#52525b" />
-                </View>
-              </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => setShowPicker(true)} className="flex-row items-center bg-[#111113] rounded-2xl h-[60px] px-1 border-[1.5px] border-[#1c1c1e] mb-8" activeOpacity={0.7}>
+                  <View className="w-10 h-10 rounded-xl bg-[#9d5ce9]/10 items-center justify-center mr-1 ml-1.5">
+                    <Ionicons name="calendar" size={18} color="#9d5ce9" />
+                  </View>
+                  <Text className={`flex-1 text-base ml-2 font-medium ${!dob ? 'text-[#3a3a3c]' : 'text-white'}`}>
+                    {dob || 'Select your birth date'}
+                  </Text>
+                  <View className="w-8 h-8 rounded-lg bg-[#1c1c1e] items-center justify-center mr-1.5">
+                    <Ionicons name="chevron-down" size={16} color="#52525b" />
+                  </View>
+                </TouchableOpacity>
+              )}
             </Animated.View>
 
-            {showPicker && (
+            {showPicker && Platform.OS !== 'web' && (
               <DateTimePicker
                 value={dateValue}
                 mode="date"

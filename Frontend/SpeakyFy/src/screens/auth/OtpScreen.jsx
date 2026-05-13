@@ -15,7 +15,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { COLORS } from '../../constants/color'
 
 const { width } = Dimensions.get('window')
-const OTP_LENGTH = 4
+const OTP_LENGTH = 6
 
 const OtpScreen = ({ onVerify, onBack }) => {
   const [timer, setTimer] = useState(30)
@@ -141,35 +141,47 @@ const OtpScreen = ({ onVerify, onBack }) => {
       
       pasted.forEach((_, i) => triggerPulse(i))
       
-      const nextIndex = Math.min(pasted.length, OTP_LENGTH - 1)
-      inputs.current[nextIndex]?.focus()
-      setFocusedIndex(nextIndex)
+      const nextFocus = Math.min(pasted.length, OTP_LENGTH - 1)
+      inputs.current[nextFocus]?.focus()
+      setFocusedIndex(nextFocus)
       return
     }
 
-    if (!/^\d?$/.test(value)) return
-    const newOtp = [...otp]
-    newOtp[index] = value
-    setOtp(newOtp)
-
-    if (value) {
+    const digit = value.replace(/\D/g, '').slice(-1)
+    
+    if (digit) {
+      const newOtp = [...otp]
+      newOtp[index] = digit
+      setOtp(newOtp)
       triggerPulse(index)
+      
       if (index < OTP_LENGTH - 1) {
         inputs.current[index + 1]?.focus()
         setFocusedIndex(index + 1)
       }
     } else {
-      if (index > 0) {
-        inputs.current[index - 1]?.focus()
-        setFocusedIndex(index - 1)
-      }
+      // Just clear current if it wasn't caught by KeyPress
+      const newOtp = [...otp]
+      newOtp[index] = ''
+      setOtp(newOtp)
     }
   }
 
   const handleKeyPress = (e, index) => {
-    if (e.nativeEvent.key === 'Backspace' && !otp[index] && index > 0) {
-      inputs.current[index - 1]?.focus()
-      setFocusedIndex(index - 1)
+    if (e.nativeEvent.key === 'Backspace') {
+      if (otp[index] === '') {
+        if (index > 0) {
+          const newOtp = [...otp]
+          newOtp[index - 1] = '' // Clear previous on back move
+          setOtp(newOtp)
+          inputs.current[index - 1]?.focus()
+          setFocusedIndex(index - 1)
+        }
+      } else {
+        const newOtp = [...otp]
+        newOtp[index] = ''
+        setOtp(newOtp)
+      }
     }
   }
 
@@ -256,7 +268,7 @@ const OtpScreen = ({ onVerify, onBack }) => {
           </Animated.View>
 
           {/* OTP Boxes */}
-          <View className="flex-row justify-center gap-4 mb-8">
+          <View className="flex-row justify-center gap-2 mb-8">
             {otp.map((digit, index) => (
               <Animated.View
                 key={index}
@@ -268,14 +280,14 @@ const OtpScreen = ({ onVerify, onBack }) => {
                   ],
                 }}
               >
-                <View className={`w-[74px] h-[88px] rounded-[24px] bg-[#161618] border-[2.5px] items-center justify-center overflow-hidden 
+                <View className={`w-[52px] h-[68px] rounded-[18px] bg-[#161618] border-[2px] items-center justify-center overflow-hidden 
                   ${focusedIndex === index ? 'border-[#9d5ce9] bg-[#1a1525]' : digit !== '' ? 'border-[#9d5ce9]/50 bg-[#18132a]' : 'border-[#2a2a2e]'}`}>
                   {focusedIndex === index && (
                     <View className="absolute w-full h-full bg-[#9d5ce9]/5" />
                   )}
                   <TextInput
                     ref={(ref) => (inputs.current[index] = ref)}
-                    className="w-full h-full text-center text-white text-[32px] font-extrabold"
+                    className="w-full h-full text-center text-white text-[24px] font-extrabold"
                     value={digit}
                     onFocus={() => setFocusedIndex(index)}
                     onChangeText={(val) => handleOtpInput(val, index)}
@@ -284,6 +296,7 @@ const OtpScreen = ({ onVerify, onBack }) => {
                     keyboardType="number-pad"
                     textContentType="oneTimeCode"
                     selectionColor="#9d5ce9"
+                    selectTextOnFocus={true}
                   />
                 </View>
               </Animated.View>

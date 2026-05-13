@@ -16,7 +16,7 @@ export default function Gender() {
     setFullName(fn)
     setDob(d)
     completeAuth()
-    router.push('/SpeakyfyHome')
+    router.replace('/(tabs)')
   }
 
   return (

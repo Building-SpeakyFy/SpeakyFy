@@ -17,7 +17,7 @@ export const SpeakyfyButton = ({
   const buttonScale = React.useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
-    Animated.spring(buttonScale, {
+    Animated.spring(buttonScale, {     /*spring use for bouncy animation*/
       toValue: 0.95,
       useNativeDriver: true,
       friction: 4,
@@ -25,14 +25,14 @@ export const SpeakyfyButton = ({
   };
 
   const handlePressOut = () => {
-    Animated.spring(buttonScale, {
+    Animated.spring(buttonScale, {      /*spring use for bouncy animation*/
       toValue: 1,
       useNativeDriver: true,
       friction: 4,
     }).start();
   };
 
-  const activeColors = ['#7c4dff', '#9d5ce9'];
+  const activeColors = ['#7c4dff', '#9d5ce9'];  //Deep purple → lighter purple
   const disabledColors = ['#3f3f46', '#3f3f46']; // zinc-800
 
   return (
