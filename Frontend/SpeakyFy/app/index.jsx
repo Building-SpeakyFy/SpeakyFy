@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { View, Image, Animated } from "react-native";
+import { View, Animated } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function Splash() {
@@ -15,18 +15,20 @@ export default function Splash() {
     }).start();
 
     const timer = setTimeout(() => {
-      router.replace("/Login");
+      router.replace("/auth/Login");
     }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    
     <View className="flex-1 items-center justify-center bg-white">
       <Animated.Image
         source={require("../assets/images/Logo.png")}
-        style={{ width: 200, height: 200, transform: [{ scale: scaleAnim }] }}
+        className="w-[200px] h-[200px]"
+        style={{
+          transform: [{ scale: scaleAnim }],
+        }}
         resizeMode="contain"
       />
     </View>

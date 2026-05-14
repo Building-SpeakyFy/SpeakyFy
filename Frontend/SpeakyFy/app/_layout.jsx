@@ -1,18 +1,25 @@
 import { Stack } from "expo-router";
+import { LogBox } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../global.css";
+import { AuthProvider } from "../src/store/AuthContext";
 
-// Build - 02/April/2026
+LogBox.ignoreLogs([
+  "No native ExponentConstants module found",
+  "No native ExpoFirebaseCore module found",
+  "SafeAreaView has been deprecated",
+]);
+
 export default function RootLayout() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      {/* Main Entry Points */}
-      <Stack.Screen name="index" /> 
-      <Stack.Screen name="Login" />
-      <Stack.Screen name="Otp" />
-      <Stack.Screen name="Gender" />
-      
-      {/* This points to the SpeakyfyHome folder */}
-      <Stack.Screen name="SpeakyfyHome" />
-    </Stack>
+    <SafeAreaProvider>
+      <AuthProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="auth" />
+          <Stack.Screen name="(tabs)" />
+        </Stack>
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 }
